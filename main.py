@@ -15,7 +15,6 @@ isRunning = True
 
 FPS = 60
 fpsClock = pygame.time.Clock()
-started = False
 
 rocket = Rocket(win, 4)
 space = Space(win, 300)
@@ -32,8 +31,10 @@ font = pygame.font.SysFont('Comic Sans MS', 30)
 
 
 def start():
-    global started
-    started = True
+    global fuelSetupEvent
+    global fuelUpdateEvent
+    global asteroidSetupEvent
+    global scoreUpdateEvent
 
     rocket.restart()
 
@@ -53,24 +54,20 @@ while isRunning:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             isRunning = False
-        elif event.type == pygame.KEYUP:
-            if not started:
-                start()
         elif event.type == pygame.MOUSEBUTTONUP:
-            if not started:
+            if not rocket.started:
                 start()
             else:
                 rocket.click(pygame.mouse.get_pos())
-                # if result:
-                #     pygame.time.set_timer(timerSetupEvent, 4000)
-        elif not started:
-            pass
+        elif not rocket.started:
+            continue
         elif event.type == fuelUpdateEvent:
             status = rocket.update()
             if not status:
                 rocket.fuelPosition = (-rocket.fuelSize[0], -rocket.fuelSize[1])
                 rocket.asteroidPosition = (-rocket.asteroidSize[0], -rocket.asteroidSize[1])
                 started = False
+                rocket.started = False
         elif event.type == fuelSetupEvent:
             rocket.setFuel()
         elif event.type == asteroidSetupEvent:

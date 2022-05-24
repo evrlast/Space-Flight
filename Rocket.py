@@ -55,7 +55,6 @@ class Rocket:
         self.fuelPosition = list((-self.fuelSize[0], -self.fuelSize[1]))
         self.asteroidPosition = (-self.asteroidSize[0], -self.asteroidSize[1])
         self.score = 0
-        self.started = False
         self.clock = pygame.time.Clock()
         self.fuelPercentage = 1
         self.fuelConsumption = 0.00005
@@ -64,8 +63,8 @@ class Rocket:
         if self.score != 0:
             self.fuelConsumption = (self.score ** 0.2) / 10000
 
-        if self.fuelConsumption >= 0.01:
-            self.fuelConsumption = 0.01
+        if self.fuelConsumption >= 0.0001:
+            self.fuelConsumption = 0.0001
 
         self.fuelPercentage -= self.fuelConsumption
 
@@ -118,6 +117,9 @@ class Rocket:
             self.setFuel()
 
     def drawFuelTank(self):
+        if self.fuelPercentage <= 0:
+            self.fuelPercentage = 0
+
         if self.fuelPercentage == 1:
             shortage = 0
         else:
